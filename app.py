@@ -14,10 +14,6 @@ APP_HANDLE = "chat-analytics-app"
 
 
 def _get_app_instance():
-    st.write(dict(api_key=st.secrets["steamship_api_key"],
-                  api_base=st.secrets["steamship_api_base"],
-                  app_base=st.secrets["steamship_app_base"],
-                  web_base=st.secrets["steamship_web_base"]))
     client = Steamship(
         api_key=st.secrets["steamship_api_key"],
         api_base=st.secrets["steamship_api_base"],
