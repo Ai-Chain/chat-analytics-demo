@@ -10,7 +10,6 @@ from steamship import App, AppInstance, Steamship
 
 from api_spec import Message
 
-ENVIRONMENT = "abbot"
 APP_HANDLE = "chat-analytics-app"
 
 
@@ -36,8 +35,6 @@ def _get_app_instance():
     app_instance = AppInstance.create(client, app_id=app.id, config=config).data
     return app_instance
 
-
-ENVIRONMENT = "abbot"
 
 st.set_page_config(layout="wide")
 
@@ -83,16 +80,9 @@ def visualize_chat_stream(chat_stream: List[Message]):
     st.dataframe(df)
 
 
-@st.cache(ttl=3600)
-def load_app(environment: str):
-    """Load chat-analytics-app in a given environment."""
-    app_instance = _get_app_instance()
-    return app_instance
-
-
 def test_analyze(chat_stream: List[Message]) -> List[Message]:
     """Test analyze endpoint."""
-    app_instance = load_app(ENVIRONMENT)
+    app_instance = _get_app_instance()
 
     response = app_instance.post(
         "analyze",
