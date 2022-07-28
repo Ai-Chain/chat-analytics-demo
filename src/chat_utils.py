@@ -6,18 +6,20 @@ from pydantic import parse_obj_as
 from steamship import AppInstance, Steamship, App
 
 from api_spec import Message
-from src.constants import APP_HANDLE, HF_MODEL_PATH
+
+APP_HANDLE = "chat-analytics-app"
+HF_MODEL_PATH = "typeform/distilbert-base-uncased-mnli"
 
 
 @st.cache(ttl=3600, allow_output_mutation=True)
-def get_app_instance(api_key: str, api_base: str, app_base: str, web_base: str, oneai_api_key: str,
+def get_app_instance(api_key: str, oneai_api_key: str,
                      hf_api_bearer_token: str) -> AppInstance:
     """Get an instance of the chat-analytics-app."""
     client = Steamship(
         api_key=api_key,
-        api_base=api_base,
-        app_base=app_base,
-        web_base=web_base
+        api_base="https://api.steamship.com/api/v1/",
+        app_base="https://steamship.run/",
+        web_base="https://app.steamship.com/"
     )
     config = {
         "oneai_api_key": oneai_api_key,
@@ -38,10 +40,7 @@ def visualize_chat_stream(chat_stream: List[Message]):
 
 def analyze_chat_stream(chat_stream: List[Message]) -> List[Message]:
     """Test analyze endpoint."""
-    app_instance = get_app_instance(api_key=st.secrets["steamship_api_key"],
-                                    api_base=st.secrets["steamship_api_base"],
-                                    app_base=st.secrets["steamship_app_base"],
-                                    web_base=st.secrets["steamship_web_base"],
+    app_instance = get_app_instance(api_key=st.secrets["steamship_api_key_chat"],
                                     oneai_api_key=st.secrets["oneai_api_key"],
                                     hf_api_bearer_token=st.secrets["hf_api_bearer_token"])
 
