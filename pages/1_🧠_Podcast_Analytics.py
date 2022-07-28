@@ -54,7 +54,7 @@ def main():
                             }
                             for speaker_tag in speaker_tags
                         ]
-                    st.dataframe(pd.DataFrame(text))
+                        st.dataframe(pd.DataFrame(text))
 
                 st.subheader("Summary")
                 highlights = [tag for tag in tags if tag.kind == "summarize"]

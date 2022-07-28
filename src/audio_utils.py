@@ -61,12 +61,15 @@ def visualize_tags(conversation, tags, title: str, tag_kind: str, tag_title: str
         tags = sorted(tags, key=lambda x: x.start_idx)
     except TypeError:
         pass
-    df = pd.DataFrame([{
-        "Label": tag.name,
-        tag_title: conversation[tag.start_idx:tag.end_idx]}
-        for i, tag in enumerate(tags)])
-    if not show_label:
-        df = df.drop(["Label"], axis=1)
-    if not show_tag:
-        df = df.drop([tag_title], axis=1)
-    st.dataframe(df)
+    if tags:
+        df = pd.DataFrame([{
+            "Label": tag.name,
+            tag_title: conversation[tag.start_idx:tag.end_idx]}
+            for i, tag in enumerate(tags)])
+        if not show_label:
+            df = df.drop(["Label"], axis=1)
+        if not show_tag:
+            df = df.drop([tag_title], axis=1)
+        st.dataframe(df)
+    else:
+        st.write("No tags found")
