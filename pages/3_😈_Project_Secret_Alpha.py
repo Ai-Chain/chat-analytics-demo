@@ -10,6 +10,7 @@ GUEST_TO_FILE_ID = {
 ENVIRONMENT = "prod"
 
 
+@st.cache(ttl=3600, allow_output_mutation=True)
 def load_files(client: Steamship):
     return {guest_id: File.get(client, file_id).data for guest_id, file_id in GUEST_TO_FILE_ID.items()}
 
