@@ -20,7 +20,7 @@ def main():
     if password == "LetTheMagicBegin":
 
         st.title("The Joe Rogan bible 📒")
-        st.text("Let's see what Joe Rogan's guest think about specific topics!")
+        st.text("Let's see what Joe Rogan's guest have to say about specific topics!")
 
         client = Steamship(
             api_key=st.secrets["steamship_api_key_audio"],
