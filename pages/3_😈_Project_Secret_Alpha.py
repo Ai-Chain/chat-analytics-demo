@@ -52,11 +52,14 @@ def main():
                        and tag.start_idx >= name_tag.start_idx
                        and tag.end_idx <= name_tag.end_idx
                 ]
-                t_start = float(timestamp_tags[0].value["start_time"])
+                if timestamp_tags:
+                    t_start = float(timestamp_tags[0].value["start_time"])
 
-                st.subheader(name_tag.value["value"])
-                st.write(f"https://youtu.be/ycPr5-27vSI?t={t_start:.0f}")
-                st.video(data=f"https://youtu.be/ycPr5-27vSI?t={t_start:.0f}", start_time=int(t_start))
+                    st.subheader(name_tag.value["value"])
+                    st.write(f"https://youtu.be/ycPr5-27vSI?t={t_start:.0f}")
+                    st.video(data=f"https://youtu.be/ycPr5-27vSI?t={t_start:.0f}", start_time=int(t_start))
+                else:
+                    st.write("Nothing found 😭")
 
 
 if __name__ == '__main__':
