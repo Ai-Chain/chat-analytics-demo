@@ -59,6 +59,10 @@ def visualize_tags(conversation, tags, title: str, tag_kind: str, tag_title: str
     tags = [tag for tag in tags if tag.kind == tag_kind]
     try:
         tags = sorted(tags, key=lambda x: x.start_idx)
+        visited = set()
+        tags = [tag for tag in tags
+                if tag.start_idx not in visited
+                and not visited.add(tag.start_idx)]
     except TypeError:
         pass
     if tags:

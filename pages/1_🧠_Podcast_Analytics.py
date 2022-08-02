@@ -2,9 +2,9 @@
 
 import pandas as pd
 import streamlit as st
-from steamship import SteamshipError
+from steamship import SteamshipError, File, Steamship
 
-from src.audio_utils import analyze_podcast, visualize_tags
+from src.audio_utils import visualize_tags
 
 PLACEHOLDER_PODCAST_URL = "https://www.youtube.com/watch?v=-UX0X45sYe4"
 
@@ -25,7 +25,16 @@ def main():
         st.video(podcast_url)
 
         with st.spinner(text="Analyzing podcast 🔬 ..."):
-            conversation, tags, block = analyze_podcast(podcast_url, n_speakers)
+            # conversation, tags, block = analyze_podcast(podcast_url, n_speakers)
+            client = Steamship(
+                profile="test",
+            )
+
+            files = File.query(client, "all").data.files
+            file = files[0]
+            block = file.blocks[0]
+            tags = block.tags
+            conversation = block.text
 
             if block:
                 with st.expander("Transcription:"):
@@ -58,8 +67,8 @@ def main():
 
                 st.subheader("Summary")
                 highlights = [tag for tag in tags if tag.kind == "summarize"]
-                highlights = sorted(highlights, key=lambda x: x.start_idx)
-                st.markdown("\n".join([highlight.name for highlight in highlights]))
+                highlights = sorted(highlights, key=lambda x: x.start_idx or 0)
+                st.markdown(r"\n".join([highlight.name for highlight in highlights]))
 
                 visualize_tags(conversation, tags, "Topic segments:", "dialogue-segmentation", "Segment",
                                show_label=False)
@@ -67,8 +76,6 @@ def main():
                 visualize_tags(conversation, tags, "Highlights:", "highlights", "Highlight", show_label=False)
 
                 visualize_tags(conversation, tags, "Emotions:", "emotions", "Emotion")
-
-                visualize_tags(conversation, tags, "Entities:", "entities", "Entity")
 
                 visualize_tags(conversation, tags, "Names:", "names", "Name")
 
