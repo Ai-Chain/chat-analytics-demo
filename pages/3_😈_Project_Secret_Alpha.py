@@ -1,7 +1,6 @@
 """Streamlit demo of the audio-analytics app."""
 from collections import defaultdict, Counter
 
-import pandas as pd
 import streamlit as st
 from steamship import File, Steamship
 
@@ -55,42 +54,15 @@ def main():
             block = file.blocks[0]
             tags = block.tags
 
-            type = st.radio("Type", options=["Name", "Sentiment"])
-            if type == "Name":
+            names = {tag.value["value"] for tag in tags if tag.kind == "names"}
+            selected_names = st.multiselect("Topic", options=names)
 
-                names = {tag.value["value"] for tag in tags if tag.kind == "names"}
-                selected_names = st.multiselect("Topic", options=names)
-
-                topics = {
-                    tag.name for tag in tags if tag.kind == "article-topics"
-                }
-                st.markdown(f"## {' #'.join(topics)}")
-                if selected_names:
-                    _list_clips_for_topics(guest, selected_names, tags)
-            else:
-                st.write("Sentiment")
-                sentiments = {tag.name for tag in tags if tag.kind == "sentiments"}
-                selected_sentiment = st.selectbox("Sentiment", options=sentiments,
-                                                  format_func=lambda x: STYLED_SENTIMENTS[x])
-
-                names = set()
-                for sentiment_tag in dict(sorted({
-                                                     tag.start_idx: tag
-                                                     for tag in tags if
-                                                     tag.kind == "sentiments" and tag.name in selected_sentiment
-                                                 }.items(), key=lambda x: x)).values():
-                    if name_tags := [tag.value["value"]
-                                     for tag in tags if
-                                     tag.kind == "names"
-                                     and tag.start_idx >= sentiment_tag.start_idx
-                                     and tag.end_idx <= sentiment_tag.end_idx]:
-                        names.update(set(name_tags))
-
-                st.write(f"{guest.title()} feels {STYLED_SENTIMENTS[selected_sentiment]} about the following topics:")
-                df = pd.DataFrame(names, columns=["Topics"])
-                st.table(df)
-
-                _list_clips_for_topics(guest, names, tags)
+            topics = {
+                tag.name for tag in tags if tag.kind == "article-topics"
+            }
+            st.markdown(f"## {' #'.join(topics)}")
+            if selected_names:
+                _list_clips_for_topics(guest, selected_names, tags)
 
 
 def _list_clips_for_topics(guest, selected_names, tags):
