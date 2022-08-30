@@ -14,9 +14,10 @@ USAGE_LIMIT = 10
 APP_ID = "chat"
 
 
-@st.cache(ttl=3600, allow_output_mutation=True)
 def get_worksheet():
-    gc = gspread.service_account(filename='src/gcred.json')
+    with Path("gcred_test.json").open("w") as f:
+        f.write(st.secrets["gcred_json"])
+    gc = gspread.service_account(filename='./gcred_test.json')
     sh = gc.open_by_key('1Dnf4gqdicSXwL4-2laeIYGR0bOeLU6tI_GtxGme4m7s')
     worksheet = sh.worksheet("Contacts")
     return worksheet
