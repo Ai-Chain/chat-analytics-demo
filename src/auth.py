@@ -25,7 +25,6 @@ def get_worksheet():
 def check_usage(usage_stats: Dict[str, Union[str, int]]):
     placeholder = st.session_state["placeholder"]
     if usage_stats:
-
         if usage_stats[APP_ID] > USAGE_LIMIT:
             placeholder.markdown(
                 f"Signed in as {usage_stats['e-mail']} - Usage quota exceeded, [contact support](mailto:developers@steamship.com) for more credits.")
@@ -71,10 +70,8 @@ def update_usage():
     usage_stats[APP_ID] += 1
     worksheet.update(f'A{user_id}:{user_id}', [list(usage_stats.values())[:-1]])
 
-    if usage_stats[APP_ID] > USAGE_LIMIT:
-        st.markdown("max usage contact support.")
-    check_usage(usage_stats)
     st.session_state["usage_stats"] = usage_stats
+    return check_usage(usage_stats)
 
 
 def get_google_oauth_client():

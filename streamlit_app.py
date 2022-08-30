@@ -28,6 +28,8 @@ def main():
         page_title='Chat Analytics',
         page_icon=Path("data/logo.png").open("rb").read()
     )
+    footer()
+
     html_string = """
     <!-- Hotjar Tracking Code for https://steamship.com -->
     <script>
@@ -72,23 +74,23 @@ def main():
             for i, (user, message) in enumerate(re.findall(r"(\w+):\s*(.*)", text))
         ]
         with st.spinner("Processing..."):
-            update_usage()
-            processed_chat_stream = analyze_chat_stream(chat_stream)
+            if update_usage():
+                processed_chat_stream = analyze_chat_stream(chat_stream)
 
-            intent_to_messages = {k: list(v) for k, v in
-                                  groupby(sorted(processed_chat_stream, key=lambda x: x.intent), lambda x: x.intent)}
-            st.markdown("")
+                intent_to_messages = {k: list(v) for k, v in
+                                      groupby(sorted(processed_chat_stream, key=lambda x: x.intent),
+                                              lambda x: x.intent)}
+                st.markdown("")
 
-            display_intent_stats(intent_to_messages)
+                display_intent_stats(intent_to_messages)
 
-            display_sentiment_stats(processed_chat_stream)
+                display_sentiment_stats(processed_chat_stream)
 
-            display_messages_by_intent(intent_to_messages)
+                display_messages_by_intent(intent_to_messages)
 
-            st.markdown("""---""")
+                st.markdown("""---""")
 
-            display_threads(processed_chat_stream)
-    footer()
+                display_threads(processed_chat_stream)
 
 
 if __name__ == '__main__':

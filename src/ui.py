@@ -109,7 +109,7 @@ footer {
 	}
 footer:after {
 	content:'Made with ❤️ on Steamship';
-	color: rgba(0,0,0,1);
+	color: rgba(255,255,255,1);
 	visibility: visible;
 	display: block;
 	position: relative;
