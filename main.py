@@ -38,21 +38,7 @@ def main():
     )
     footer()
 
-    html_string = """
-    <!-- Hotjar Tracking Code for https://steamship.com -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:3131229,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
-    """
-    st.markdown(html_string, unsafe_allow_html=True)
-
+    st.title("Chat Analytics Demo 💬")
     placeholder = st.empty()
     st.session_state["placeholder"] = placeholder
     check_usage(st.session_state.get("usage_stats"))
@@ -69,18 +55,18 @@ def main():
     )
 
     if st.button(label="Analyze! 🚀"):
-        text = text.strip()
-        chat_stream = [
-            Message(
-                message_id=str(i),
-                timestamp=datetime.now(),
-                user_id=user,
-                text=message,
-            )
-            for i, (user, message) in enumerate(re.findall(r"(\w+):\s*(.*)", text))
-        ]
-        with st.spinner("Processing..."):
-            if increase_usage():
+        if increase_usage():
+            text = text.strip()
+            chat_stream = [
+                Message(
+                    message_id=str(i),
+                    timestamp=datetime.now(),
+                    user_id=user,
+                    text=message,
+                )
+                for i, (user, message) in enumerate(re.findall(r"(\w+):\s*(.*)", text))
+            ]
+            with st.spinner("Processing..."):
                 processed_chat_stream = analyze_chat_stream(chat_stream)
 
                 intent_to_messages = {

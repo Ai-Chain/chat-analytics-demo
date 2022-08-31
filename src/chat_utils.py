@@ -19,13 +19,12 @@ def get_app_instance(api_key: str) -> AppInstance:
         app_base="https://steamship.run/",
         web_base="https://app.steamship.com/",
     )
-    app_instance = AppInstance.create(client, app_handle=APP_HANDLE, handle=APP_HANDLE, upsert=True).data
-    return app_instance
+    return AppInstance.create(client, app_handle=APP_HANDLE, handle=APP_HANDLE, upsert=True).data
 
 
 def analyze_chat_stream(chat_stream: List[Message]) -> List[Message]:
     """Test analyze endpoint."""
-    app_instance = get_app_instance(api_key=st.secrets["steamship_api_key_chat"])
+    app_instance = get_app_instance(api_key=st.secrets["steamship_api_key"])
 
     response = app_instance.post(
         "analyze",
