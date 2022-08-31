@@ -1,6 +1,5 @@
 from typing import List
 
-import pandas as pd
 import streamlit as st
 from pydantic import parse_obj_as
 from steamship import AppInstance, Steamship, App
@@ -29,13 +28,6 @@ def get_app_instance(api_key: str, oneai_api_key: str,
     app = App.get(client, handle=APP_HANDLE).data
     app_instance = AppInstance.create(client, app_id=app.id, config=config).data
     return app_instance
-
-
-def visualize_chat_stream(chat_stream: List[Message]):
-    """Visualize a chat stream using a pandas dataframe."""
-    df = pd.DataFrame([message.dict() for message in chat_stream])
-    df = df.drop(["timestamp"], axis=1)
-    st.dataframe(df)
 
 
 def analyze_chat_stream(chat_stream: List[Message]) -> List[Message]:

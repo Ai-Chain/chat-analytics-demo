@@ -12,31 +12,40 @@ from httpx_oauth.oauth2 import GetAccessTokenError
 
 USAGE_LIMIT = 10
 APP_ID = "chat"
+USAGE_SHEET = '1Dnf4gqdicSXwL4-2laeIYGR0bOeLU6tI_GtxGme4m7s'
+GCRED_FILE_NAME = "gcred.json"
 
 
 def get_worksheet():
-    with Path("gcred_test.json").open("w") as f:
-        f.write(st.secrets["gcred_json"])
-    gc = gspread.service_account(filename='./gcred_test.json')
-    sh = gc.open_by_key('1Dnf4gqdicSXwL4-2laeIYGR0bOeLU6tI_GtxGme4m7s')
-    worksheet = sh.worksheet("Contacts")
-    return worksheet
+    if worksheet := st.session_state.get("worksheet"):
+        return worksheet
+    else:
+        with Path(GCRED_FILE_NAME).open("w") as f:
+            f.write(st.secrets["gcred_json"])
+        gc = gspread.service_account(filename=GCRED_FILE_NAME)
+        sh = gc.open_by_key(USAGE_SHEET)
+        worksheet = sh.worksheet("Contacts")
+        st.session_state["worksheet"] = worksheet
+        return worksheet
 
 
-def check_usage(usage_stats: Dict[str, Union[str, int]]):
+def check_usage(usage_stats: Dict[str, Union[str, int]]) -> bool:
     placeholder = st.session_state["placeholder"]
     if usage_stats:
         if usage_stats[APP_ID] > USAGE_LIMIT:
             placeholder.markdown(
                 f"Signed in as {usage_stats['e-mail']} - Usage quota exceeded, [contact support](mailto:developers@steamship.com) for more credits.")
+            return False
         else:
             placeholder.markdown(
-                f"Signed in as {usage_stats['e-mail']} - Usage quota {usage_stats[APP_ID]}/{USAGE_LIMIT}")
+                f"Signed in as {usage_stats['e-mail']} - Usage: {usage_stats[APP_ID]}/{USAGE_LIMIT}")
+            return True
     else:
         placeholder.markdown("Not logged in yet")
+        return False
 
 
-def get_user_stats(email: str):
+def get_user_stats(email: str) -> Dict[str, Union[str, int]]:
     worksheet = get_worksheet()
     labels = worksheet.row_values(1)
 
@@ -63,9 +72,8 @@ def get_user_stats(email: str):
     return usage_stats
 
 
-def update_usage():
+def update_usage() -> bool:
     usage_stats = st.session_state["usage_stats"]
-    print(f"Increasing usage for {usage_stats['e-mail']}")
     worksheet = get_worksheet()
     user_id = usage_stats["id"]
     usage_stats[APP_ID] += 1
@@ -111,9 +119,9 @@ def check_auth() -> None:
 
 
 def show_login_prompt(authorization_url):
-    st.markdown("Please sign in to use our app:")
+    st.markdown("Please sign in to use our app")
 
-    image = Path("google_login_button.png")
+    image = Path("data/google_login_button.png")
     file_ = image.open("rb")
     contents = file_.read()
     data_url = base64.b64encode(contents).decode("utf-8")

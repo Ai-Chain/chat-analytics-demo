@@ -108,7 +108,7 @@ footer {
 	visibility: hidden;
 	}
 footer:after {
-	content:'Made with ❤️ on Steamship';
+	content:'Made with ❤️ by Steamship';
 	color: rgba(255,255,255,1);
 	visibility: visible;
 	display: block;
@@ -126,7 +126,8 @@ def display_messages_by_intent(intent_to_messages):
     tabs = st.tabs(
         [f"{props['title']} ({len(intent_to_messages[intent])})" for intent, props in
          INTERESTING_INTENTS.items()])
-    for tab, props, messages in zip(tabs, INTERESTING_INTENTS.values(), intent_to_messages.values()):
+    for tab, props, messages in zip(tabs, INTERESTING_INTENTS.values(),
+                                    [intent_to_messages[intent] for intent in INTERESTING_INTENTS.keys()]):
         with tab:
             st.header(props["title"])
             for message in messages:
