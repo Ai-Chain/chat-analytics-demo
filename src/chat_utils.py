@@ -19,7 +19,7 @@ def get_app_instance(api_key: str) -> AppInstance:
         app_base="https://steamship.run/",
         web_base="https://app.steamship.com/",
     )
-    app_instance = AppInstance.create(client, app_handle=APP_HANDLE, handle=APP_HANDLE).data
+    app_instance = AppInstance.create(client, app_handle=APP_HANDLE, handle=APP_HANDLE, upsert=True).data
     return app_instance
 
 
