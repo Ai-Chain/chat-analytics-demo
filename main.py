@@ -88,7 +88,9 @@ def main():
 
                 display_threads(processed_chat_stream)
         else:
-            st.error("Usage quota exceeded, [contact support](mailto:developers@steamship.com) for more credits.")
+            st.error(
+                "Usage quota exceeded, [contact support](mailto:developers@steamship.com) for more credits."
+            )
 
 
 if __name__ == "__main__":
