@@ -11,9 +11,9 @@ import streamlit as st
 from httpx_oauth.clients.google import GoogleOAuth2
 from httpx_oauth.oauth2 import GetAccessTokenError
 
-USAGE_LIMIT = 10
-APP_ID = "chat"
 GCRED_FILE_NAME = "gcred.json"
+USAGE_LIMIT = st.secrets["usage_limit"]
+APP_ID = st.secrets["app_id"]
 
 
 def get_worksheet():
