@@ -7,7 +7,7 @@ from pathlib import Path
 import streamlit as st
 
 from api_spec import Intent, Message, Sentiment
-from src.auth import authenticate, check_usage, increase_usage
+from src.auth import authenticate, increase_usage
 from src.chat_utils import analyze_chat_stream
 from src.data import EXAMPLES
 from src.ui import (
@@ -41,8 +41,6 @@ def main():
     st.title("Chat Analytics Demo 💬")
     placeholder = st.empty()
     st.session_state["placeholder"] = placeholder
-    check_usage(st.session_state.get("usage_stats"))
-
     authenticate()
 
     st.title("Chat Analytics")
@@ -87,10 +85,6 @@ def main():
                 st.markdown("""---""")
 
                 display_threads(processed_chat_stream)
-        else:
-            st.error(
-                "Usage quota exceeded, [contact support](mailto:developers@steamship.com) for more credits."
-            )
 
 
 if __name__ == "__main__":

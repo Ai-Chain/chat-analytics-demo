@@ -3,3 +3,5 @@
 build
 .streamlit/secrets.toml
 src/gcred.json
+*pyc
+gcred.json

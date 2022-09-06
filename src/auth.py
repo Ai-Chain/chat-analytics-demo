@@ -14,6 +14,7 @@ from httpx_oauth.oauth2 import GetAccessTokenError
 GCRED_FILE_NAME = "gcred.json"
 USAGE_LIMIT = st.secrets["usage_limit"]
 APP_ID = st.secrets["app_id"]
+USAGE_EXCEEDED_MESSAGE = "Usage quota exceeded. \n \n join our [private beta](https://caj4qt563o4.typeform.com/to/fVlZOBOb) for more credits."
 
 
 def get_worksheet():
@@ -35,17 +36,26 @@ def check_usage(usage_stats: Dict[str, Union[str, int]]) -> bool:
     placeholder = st.session_state["placeholder"]
     if usage_stats:
         if usage_stats[APP_ID] > USAGE_LIMIT:
-            placeholder.markdown(
-                f"Signed in as {usage_stats['e-mail']} - Usage quota exceeded, [contact support](mailto:developers@steamship.com) for more credits."
-            )
+            with placeholder.container():
+                st.markdown(
+                    f"Signed in as {usage_stats['e-mail']} - Usage: {usage_stats[APP_ID]}/{USAGE_LIMIT}"
+                )
+                st.error(USAGE_EXCEEDED_MESSAGE)
             return False
         else:
-            placeholder.markdown(
-                f"Signed in as {usage_stats['e-mail']} - Usage: {usage_stats[APP_ID]}/{USAGE_LIMIT}"
-            )
+            with placeholder.container():
+                st.markdown(
+                    f"Signed in as {usage_stats['e-mail']} - Usage: {usage_stats[APP_ID]}/{USAGE_LIMIT}"
+                )
+                st.warning(
+                    "We launched our private beta! 🥳 We're offering exclusive access to early birds. "
+                    " \n "
+                    " \n "
+                    "Sign up [here](https://caj4qt563o4.typeform.com/to/fVlZOBOb) and start shipping today.",
+                    icon="📣")
             return True
     else:
-        placeholder.markdown("Not logged in yet")
+        placeholder.markdown("Not logged in yet.")
         return False
 
 
@@ -82,12 +92,14 @@ def get_usage_stats(email: str) -> Dict[str, Union[str, int]]:
 def increase_usage() -> bool:
     """Increase the usage stats for the authenticated user and store them in the worksheet."""
     usage_stats = st.session_state["usage_stats"]
-    worksheet = get_worksheet()
-    user_id = usage_stats["id"]
-    usage_stats[APP_ID] += 1
-    worksheet.update(f"A{user_id}:{user_id}", [list(usage_stats.values())[:-1]])
+    can_use = check_usage(usage_stats)
+    if can_use:
+        worksheet = get_worksheet()
+        user_id = usage_stats["id"]
+        usage_stats[APP_ID] += 1
+        worksheet.update(f"A{user_id}:{user_id}", [list(usage_stats.values())[:-1]])
 
-    st.session_state["usage_stats"] = usage_stats
+        st.session_state["usage_stats"] = usage_stats
     return check_usage(usage_stats)
 
 
