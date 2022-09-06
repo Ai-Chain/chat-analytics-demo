@@ -14,7 +14,7 @@ from httpx_oauth.oauth2 import GetAccessTokenError
 GCRED_FILE_NAME = "gcred.json"
 USAGE_LIMIT = st.secrets["usage_limit"]
 APP_ID = st.secrets["app_id"]
-USAGE_EXCEEDED_MESSAGE = "Usage quota exceeded. \n \n join our [private beta](https://caj4qt563o4.typeform.com/to/fVlZOBOb) for more credits."
+USAGE_EXCEEDED_MESSAGE = "Usage quota exceeded. \n \n Join our [private beta](https://caj4qt563o4.typeform.com/to/fVlZOBOb) for more credits."
 
 
 def get_worksheet():
@@ -112,6 +112,9 @@ def get_google_oauth_client():
 
 def authenticate() -> None:
     """Authenticate the user using Google Oauth."""
+    placeholder = st.empty()
+    st.session_state["placeholder"] = placeholder
+
     client = get_google_oauth_client()
 
     redirect_uri = st.secrets["redirect_uri"]
