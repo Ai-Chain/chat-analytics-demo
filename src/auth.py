@@ -14,7 +14,8 @@ from httpx_oauth.oauth2 import GetAccessTokenError
 GCRED_FILE_NAME = "gcred.json"
 USAGE_LIMIT = st.secrets["usage_limit"]
 APP_ID = st.secrets["app_id"]
-USAGE_EXCEEDED_MESSAGE = "Usage quota exceeded. \n \n Join our [private beta](https://caj4qt563o4.typeform.com/to/fVlZOBOb) for more credits."
+TYPEFORM_FORM = "https://caj4qt563o4.typeform.com/to/fVlZOBOb#app=chat&source=demo"
+USAGE_EXCEEDED_MESSAGE = f"Usage quota exceeded. \n \n Join our [private beta]({TYPEFORM_FORM}) for more credits."
 
 
 def get_worksheet():
@@ -51,7 +52,7 @@ def check_usage(usage_stats: Dict[str, Union[str, int]]) -> bool:
                     "We launched our private beta! 🥳 We're offering exclusive access to early birds. "
                     " \n "
                     " \n "
-                    "Sign up [here](https://caj4qt563o4.typeform.com/to/fVlZOBOb) and start shipping today.",
+                    f"Sign up [here]({TYPEFORM_FORM}) and start shipping today.",
                     icon="📣")
             return True
     else:
