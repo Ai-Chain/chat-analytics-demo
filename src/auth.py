@@ -14,7 +14,7 @@ from httpx_oauth.oauth2 import GetAccessTokenError
 GCRED_FILE_NAME = "gcred.json"
 USAGE_LIMIT = st.secrets["usage_limit"]
 APP_ID = st.secrets["app_id"]
-TYPEFORM_FORM = "https://caj4qt563o4.typeform.com/to/fVlZOBOb#app=chat&source=demo"
+TYPEFORM_FORM = st.secrets["typeform_url"]
 USAGE_EXCEEDED_MESSAGE = f"Usage quota exceeded. \n \n Join our [private beta]({TYPEFORM_FORM}) for more credits."
 
 
