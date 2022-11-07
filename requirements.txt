@@ -1,6 +1,6 @@
 git+https://github.com/nludb/python-client@main
 pandas
-streamlit
+streamlit==2.2.0
 plotly
 gspread
 httpx-oauth
