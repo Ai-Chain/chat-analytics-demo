@@ -1,6 +1,6 @@
-git+https://github.com/nludb/python-client@main
+steamship==2.2.0
 pandas
-streamlit==2.2.0
+streamlit
 plotly
 gspread
 httpx-oauth
