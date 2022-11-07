@@ -19,7 +19,7 @@ def get_app_instance(api_key: str) -> PackageInstance:
         app_base="https://steamship.run/",
         web_base="https://app.steamship.com/",
     )
-    return client.use(package_handle=APP_HANDLE, instance_handle=APP_HANDLE, fetch_if_exists=False)
+    return client.use(package_handle=APP_HANDLE, instance_handle=APP_HANDLE, fetch_if_exists=True)
 
 
 def analyze_chat_stream(chat_stream: List[Message]) -> List[Message]:
